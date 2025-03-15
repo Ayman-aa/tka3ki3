@@ -43,3 +43,10 @@ SELECT first_name, last_name FROM students WHERE first_name ILIKE '%a_';
 SELECT first_name, last_name FROM students WHERE id IN (1, 3);
 
 SELECT * FROM students WHERE birth_date >= '2000-01-01';
+
+-- ex2 continue
+SELECT first_name, last_name, birth_date FROM students ORDER BY last_name ASC LIMIT 4;
+
+SELECT first_name, last_name, birth_date FROM students ORDER BY birth_date DESC LIMIT 1;
+
+SELECT first_name, last_name, birth_date FROM students ORDER BY id ASC OFFSET 2 LIMIT 3;
