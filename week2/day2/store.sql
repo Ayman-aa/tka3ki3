@@ -75,3 +75,30 @@ WHERE item_id IN (
 ) 
 GROUP BY customer_id
 HAVING COUNT(DISTINCT item_id) = 2;
+
+--ninja part
+
+SELECT first_name, last_name FROM customers ORDER BY first_name, last_name LIMIT 2;
+
+DELETE FROM purchases WHERE customer_id = (SELECT id FROM customers WHERE first_name = 'Scott' AND last_name = 'Scott');
+
+SELECT * FROM customers WHERE first_name = 'Scott' AND last_name = 'Scott';
+
+SELECT 
+    p.id AS purchase_id, 
+    COALESCE(c.first_name, '') AS first_name, --COALESCE to show blank instead of NULL
+    COALESCE(c.last_name, '') AS last_name, 
+    p.item_id, 
+    p.quantity_purchased
+FROM purchases p
+RIGHT JOIN customers c ON p.customer_id = c.id;
+
+SELECT 
+    p.id AS purchase_id, 
+    c.first_name, 
+    c.last_name, 
+    p.item_id, 
+    p.quantity_purchased
+FROM purchases p
+INNER JOIN customers c ON p.customer_id = c.id; --inner join to show the matched data only
+
