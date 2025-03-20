@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Challenge: Create a solar system</title>
+        <style>
+            body {
+                background-color: black;
+                padding: 10px;
+                color: white;
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .listPlanets {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            .planet {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                text-align: center;
+                padding: 10px;
+                position: relative;
+                border: 2px solid white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 14px;
+                font-weight: bold;
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+                transition: transform 0.3s;
+            }
+            .planet:hover {
+                transform: scale(1.1);
+            }
+            .moon {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: rgb(237, 237, 237);
+                border: 2px solid red;
+                animation: orbit 5s linear infinite;
+            }
+            @keyframes orbit {
+                from {
+                    transform: rotate(0deg) translateX(60px) rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg) translateX(60px) rotate(-360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+    <section class="listPlanets"></section>
+
+    <script>
+        const planets = [
+            { name: "Mercury", color: "gray", moons: 0 },
+            { name: "Venus", color: "yellow", moons: 0 },
+            { name: "Earth", color: "blue", moons: 1 },
+            { name: "Mars", color: "red", moons: 2 },
+            { name: "Jupiter", color: "orange", moons: 79 },
+            { name: "Saturn", color: "goldenrod", moons: 83 },
+            { name: "Uranus", color: "lightblue", moons: 27 },
+            { name: "Neptune", color: "darkblue", moons: 14 }
+        ];
+
+        const section = document.querySelector('.listPlanets');
+
+        planets.forEach(planet => {
+            const planetDiv = document.createElement('div');
+            planetDiv.classList.add('planet');
+            planetDiv.style.backgroundColor = planet.color;
+            planetDiv.textContent = planet.name;
+
+            for (let i = 0; i < planet.moons; i++) {
+                const moonDiv = document.createElement('div');
+                moonDiv.classList.add('moon');
+                moonDiv.style.top = `${Math.random() * 80}px`;
+                moonDiv.style.left = `${Math.random() * 80}px`;
+                planetDiv.appendChild(moonDiv);
+            }
+
+            section.appendChild(planetDiv);
+        });
+    </script>
+    </body>
+</html>
