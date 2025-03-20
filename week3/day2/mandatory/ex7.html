@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+</head>
+<body>
+    <section class="listBooks"></section>
+
+    <script>
+        const allBooks = [
+            {
+                title: "To Kill a Mockingbird",
+                author: "Harper Lee",
+                image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                alreadyRead: true
+            },
+            {
+                title: "1984",
+                author: "George Orwell",
+                image: "https://freerangestock.com/sample/105225/open-book-on-tree-stump.jpg",
+                alreadyRead: false
+            }
+        ];
+
+        const section = document.querySelector('.listBooks');
+
+        allBooks.forEach(book => {
+            const bookDiv = document.createElement('div');
+            const bookDetails = document.createElement('p');
+            bookDetails.textContent = `${book.title} written by ${book.author}`;
+            if (book.alreadyRead) {
+                bookDetails.style.color = 'red';
+            }
+            const bookImage = document.createElement('img');
+            bookImage.src = book.image;
+            bookImage.style.width = '100px';
+
+            bookDiv.appendChild(bookDetails);
+            bookDiv.appendChild(bookImage);
+            section.appendChild(bookDiv);
+        });
+    </script>
+</body>
+</html></html>
