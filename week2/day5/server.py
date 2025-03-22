@@ -3,9 +3,7 @@ from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import List, Optional
-import uvicorn
 from contextlib import contextmanager
-
 from menu_item import MenuItem
 from menu_manager import MenuManager
 
@@ -275,6 +273,3 @@ def delete_menu_item(item_name: str, conn = Depends(get_connection)):
         item.delete(conn)
     
     return None
-
-if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
