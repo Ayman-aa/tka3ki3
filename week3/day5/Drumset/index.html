@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Drumset</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #121212, #2a2a2a);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        
+        h1 {
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .keys {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 800px;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .key {
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            transition: all 0.07s;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .playing {
+            transform: scale(1.1);
+            border-color: #ffc600;
+            box-shadow: 0 0 20px #ffc600;
+        }
+        
+        .key kbd {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .sound {
+            font-size: 0.8rem;
+            color: #ffc600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        
+        .playlist-section {
+            margin-top: 40px;
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .playlist-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffc600;
+        }
+        
+        .playlist-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .playlist {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .playlist:hover {
+            background: rgba(0, 0, 0, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .playlist h3 {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .play-btn {
+            background: #ffc600;
+            color: #121212;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .sequence {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .key-hint {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background: #ffc600;
+            color: #121212;
+        }
+        
+        .difficulty {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Drumset</h1>
+    
+    <div class="keys">
+        <div data-key="65" class="key">
+            <kbd>A</kbd>
+            <span class="sound">Clap</span>
+        </div>
+        <div data-key="83" class="key">
+            <kbd>S</kbd>
+            <span class="sound">Hihat</span>
+        </div>
+        <div data-key="68" class="key">
+            <kbd>D</kbd>
+            <span class="sound">Kick</span>
+        </div>
+        <div data-key="70" class="key">
+            <kbd>F</kbd>
+            <span class="sound">Openhat</span>
+        </div>
+        <div data-key="71" class="key">
+            <kbd>G</kbd>
+            <span class="sound">Boom</span>
+        </div>
+        <div data-key="72" class="key">
+            <kbd>H</kbd>
+            <span class="sound">Ride</span>
+        </div>
+        <div data-key="74" class="key">
+            <kbd>J</kbd>
+            <span class="sound">Snare</span>
+        </div>
+        <div data-key="75" class="key">
+            <kbd>K</kbd>
+            <span class="sound">Tom</span>
+        </div>
+        <div data-key="76" class="key">
+            <kbd>L</kbd>
+            <span class="sound">Tink</span>
+        </div>
+    </div>
+    
+    <p class="instructions">Play drums by pressing the corresponding keys on your keyboard or by clicking the buttons!</p>
+
+    <div class="playlist-section">
+        <h2>Beat Playlists</h2>
+        <p class="instructions">Follow these patterns or click Play to hear them automatically!</p>
+        <div class="playlist-container">
+            <div class="playlist" data-sequence="65,83,68,83,65,83,68,83">
+                <h3>
+                    Basic Beat
+                    <span class="difficulty">Beginner</span>
+                    <button class="play-btn">▶ Play</button>
+                </h3>
+                <div class="sequence">
+                    <span class="key-hint">A</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">A</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">S</span>
+                </div>
+            </div>
+            
+            <div class="playlist" data-sequence="68,74,83,68,74,83,75,71">
+                <h3>
+                    Funky Rhythm
+                    <span class="difficulty">Intermediate</span>
+                    <button class="play-btn">▶ Play</button>
+                </h3>
+                <div class="sequence">
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">J</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">J</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">K</span>
+                    <span class="key-hint">G</span>
+                </div>
+            </div>
+            
+            <div class="playlist" data-sequence="68,68,74,83,70,74,75,71,76,68,74">
+                <h3>
+                    Complex Pattern
+                    <span class="difficulty">Advanced</span>
+                    <button class="play-btn">▶ Play</button>
+                </h3>
+                <div class="sequence">
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">J</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">F</span>
+                    <span class="key-hint">J</span>
+                    <span class="key-hint">K</span>
+                    <span class="key-hint">G</span>
+                    <span class="key-hint">L</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">J</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio data-key="65" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/clap.wav"></audio>
+    <audio data-key="83" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/hihat.wav"></audio>
+    <audio data-key="68" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/kick.wav"></audio>
+    <audio data-key="70" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/openhat.wav"></audio>
+    <audio data-key="71" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/boom.wav"></audio>
+    <audio data-key="72" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/ride.wav"></audio>
+    <audio data-key="74" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/snare.wav"></audio>
+    <audio data-key="75" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/tom.wav"></audio>
+    <audio data-key="76" src="https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/tink.wav"></audio>
+
+    <script>
+        function playSound(e) {
+            const keyCode = e.keyCode || this.getAttribute('data-key');
+            const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+            const key = document.querySelector(`.key[data-key="${keyCode}"]`);
+            
+            if (!audio) return; 
+            
+            audio.currentTime = 0;
+            audio.play();
+            key.classList.add('playing');
+        }
+
+        function removeTransition(e) {
+            if (e.propertyName !== 'transform') return;
+            this.classList.remove('playing');
+        }
+
+        function playSequence(sequence) {
+            if (window.playingSequence) {
+                clearInterval(window.playingSequence);
+                document.querySelectorAll('.key-hint.highlight').forEach(hint => {
+                    hint.classList.remove('highlight');
+                });
+            }
+            
+            const keys = sequence.split(',');
+            let i = 0;
+            
+            const playlistElement = this.closest('.playlist');
+            const keyHints = playlistElement.querySelectorAll('.key-hint');
+            
+            window.playingSequence = setInterval(() => {
+                if (i >= keys.length) {
+                    clearInterval(window.playingSequence);
+                    window.playingSequence = null;
+                    
+                    keyHints.forEach(hint => {
+                        hint.classList.remove('highlight');
+                    });
+                    return;
+                }
+                
+                if (i > 0) keyHints[i-1].classList.remove('highlight');
+                keyHints[i].classList.add('highlight');
+                
+                const keyCode = keys[i];
+                const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+                const key = document.querySelector(`.key[data-key="${keyCode}"]`);
+                
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play();
+                    key.classList.add('playing');
+                }
+                
+                i++;
+            }, 500); 
+        }
+        
+        window.addEventListener('keydown', playSound);
+
+        const keys = document.querySelectorAll('.key');
+        keys.forEach(key => key.addEventListener('click', playSound));
+        keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+        
+        const playButtons = document.querySelectorAll('.play-btn');
+        playButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); 
+                const sequence = this.closest('.playlist').getAttribute('data-sequence');
+                playSequence.call(this, sequence);
+            });
+        });
+        
+        const playlists = document.querySelectorAll('.playlist');
+        playlists.forEach(playlist => {
+            playlist.addEventListener('click', function() {
+                const sequence = this.getAttribute('data-sequence');
+                playSequence.call(this, sequence);
+            });
+        });
+    </script>
+</body>
+</html>
