@@ -1,31 +1,11 @@
-const stock = { 
-    "banana": 6, 
-    "apple": 0,
-    "pear": 12,
-    "orange": 32,
-    "blueberry":1
-}  
+const colors = ["blue", "green", "purple", "orange", "red"];
 
-const prices = {    
-    "banana": 4, 
-    "apple": 2, 
-    "pear": 1,
-    "orange": 1.5,
-    "blueberry":10
+for (let i = 0; i < colors.length; i++) {
+    console.log(`My #${i+1} choice is ${colors[i]}`);
 }
 
-shoppingList = ['banana', 'apple', 'orange'];
+const suffixes = ["st", "nd", "rd", "th", "th"];
 
-function myBill() {
-    let total = 0;
-    for (let i = 0; i < shoppingList.length; i++) {
-        let item = shoppingList[i];
-        if (item in stock && stock[item] > 0) {
-            total += prices[item];
-            stock[item]--;
-        }
-    }
-    return total;
+for (let i = 0; i < colors.length; i++) {
+    console.log(`My ${i+1}${suffixes[i]} choice is ${colors[i]}`);
 }
-
-console.log("Your bill : ",myBill());

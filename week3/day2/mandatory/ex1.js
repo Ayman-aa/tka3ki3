@@ -1,13 +1,26 @@
-function displayNumbersDivisible(divisor) {
-    var divisables = 0;
-    for (let i = 0; i < 500; i++) {
-        if (i % divisor == 0) {
-            divisables += i;
-            console.log(`The number ${i} is divisible by ${divisor}`);
-        } else {
-            console.log(`The number ${i} is not divisible by ${divisor}`);
-        }
-    }
-    console.log(`The sum of all numbers divisible by ${divisor} is ${divisables}`);
+const people = ["Greg", "Mary", "Devon", "James"];
+
+people.shift()
+
+people[2] = "Jason"
+
+people.push("Ayman")
+
+console.log(people.indexOf('Mary'))
+
+let str1 = people.slice(1,3)
+
+console.log(people.indexOf("Foo")) //yes it does
+
+let last = people[people.length - 1]
+
+for (let i = 0; i < people.length; i++) {
+    console.log(people[i]);
 }
-displayNumbersDivisible(23)
+
+for (let i = 0; i < people.length; i++) {
+    console.log(people[i]);
+    if (people[i] === "Devon") {
+        break;
+    }
+}
