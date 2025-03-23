@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letters Only Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            width: 250px;
+            font-size: 16px;
+        }
+        .invalid {
+            border: 2px solid red;
+        }
+        .message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letters Only Input</h1>
+    <div class="input-container">
+        <label for="lettersOnly">Enter text (letters only):</label>
+        <input type="text" id="lettersOnly" placeholder="Type here...">
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('lettersOnly');
+        const messageEl = document.getElementById('message');
+       /* 
+        inputField.addEventListener('input', function(e) {
+            const inputValue = e.target.value;
+            const lettersOnly = inputValue.replace(/[^a-zA-Z]/g, '');
+        
+            if (inputValue !== lettersOnly) {
+                e.target.value = lettersOnly;
+                messageEl.textContent = "Only letters are allowed!";
+                inputField.classList.add('invalid');
+                
+                setTimeout(() => {
+                    messageEl.textContent = "";
+                    inputField.classList.remove('invalid');
+                }, 2000);
+            }
+        });
+        */
+        
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key.length === 1 && !/[a-zA-Z]/.test(e.key)) {
+                e.preventDefault();
+                messageEl.textContent = "Only letters are allowed!";
+                
+                setTimeout(() => {
+                    messageEl.textContent = "";
+                }, 2000);
+            }
+        });
+        
+    </script>
+</body>
+</html>
