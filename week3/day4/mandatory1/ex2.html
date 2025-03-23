@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <label for="fname">First name:</label><br>
+        <input type="text" id="fname" name="firstname"><br>
+        <label for="lname">Last name:</label><br>
+        <input type="text" id="lname" name="lastname"><br><br>
+        <input type="submit" value="Submit" id="submit">
+      </form> 
+      <ul class="usersAnswer"></ul>
+      
+    <script>
+        //1
+        const form = document.querySelector('form');
+        console.log(form);
+        //2
+        const fnameInputById = document.getElementById('fname');
+        const lnameInputById = document.getElementById('lname');
+        console.log(fnameInputById, lnameInputById);
+
+        const fnameInputByName = document.getElementsByName('firstname')[0];
+        const lnameInputByName = document.getElementsByName('lastname')[0];
+        console.log(fnameInputByName, lnameInputByName);
+
+        //3
+        form.addEventListener('submit', function(event) {
+            /*
+                the default action is to send the form data to the server and reload the page.
+                By using event.preventDefault();
+                you can prevent this default behavior
+            */
+            event.preventDefault();
+            
+            const firstName = fnameInputById.value.trim();
+            const lastName = lnameInputById.value.trim();
+            
+            if (firstName && lastName) {
+            const ul = document.querySelector('.usersAnswer');
+            ul.innerHTML = ''; 
+            
+            const liFirstName = document.createElement('li');
+            liFirstName.textContent = firstName;
+            ul.appendChild(liFirstName);
+            
+            const liLastName = document.createElement('li');
+            liLastName.textContent = lastName;
+            ul.appendChild(liLastName);
+            
+
+            form.reset();
+            } else {
+            alert('Please fill in both fields.');
+            }
+        });
+    </script>
+</body>
+</html>

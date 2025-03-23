@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <article>
+        <h1> Some Facts </h1>
+        <h2> The Chocolate </h2>
+        <h3> History of the chocolate </h3>
+        <p> Chocolate is made from tropical Theobroma cacao tree seeds. 
+        Its earliest use dates back to the Olmec civilization in Mesoamerica.</p>
+        <p> After the European discovery of the Americas, chocolate became 
+        very popular in the wider world, and its demand exploded. </p>
+        <p> Chocolate has since become a popular food product that millions enjoy every day, 
+        thanks to its unique, rich, and sweet taste.</p> 
+        <p> But what effect does eating chocolate have on our health?</p> 
+    </article>
+    <script>
+        //1
+        const header = document.querySelector('h1');
+        console.log(header);
+        
+        //2
+        const article = document.querySelector('article');
+        const paragraphs = article.querySelectorAll('p');
+        article.removeChild(paragraphs[paragraphs.length - 1]);
+        
+        //3
+        const h2 = document.querySelector('h2');
+        h2.addEventListener('click', function() {
+            this.style.backgroundColor = 'red';
+        });
+        
+        //4
+        const h3 = document.querySelector('h3');
+        h3.addEventListener('click', function() {
+            this.style.display = 'none';
+        });
+        
+        //4
+        const button = document.createElement('button');
+        button.textContent = 'Make Paragraphs Bold';
+        document.body.appendChild(button);
+        button.addEventListener('click', function() {
+            const allParagraphs = document.querySelectorAll('p');
+            allParagraphs.forEach(p => {
+                p.style.fontWeight = 'bold';
+            });
+        });
+        
+        //5
+        header.addEventListener('mouseover', function() {
+            const randomSize = Math.floor(Math.random() * 100);
+            this.style.fontSize = `${randomSize}px`;
+        });
+        
+        //6
+        const secondParagraph = paragraphs[1];
+        secondParagraph.style.transition = 'opacity 0.5s ease';
+        secondParagraph.addEventListener('mouseover', function() {
+            this.style.opacity = '0';
+        });
+        secondParagraph.addEventListener('mouseout', function() {
+            this.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
