@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Challenge: Mad Libs</title>
+ </head>
+ <body>
+
+    <h1>Mad Libs</h1>
+
+    <form id="libform">
+        <label for="noun">Noun:</label><input type="text" id="noun"><br>
+        <label for="adjective">Adjective:</label><input type="text" id="adjective"><br>
+        <label for="person">Someone's Name:</label><input type="text" id="person"><br>
+        <label for="verb">Verb:</label><input type="text" id="verb"><br>
+        <label for="place">A place:</label><input type="text" id="place"><br>
+        <button id="lib-button">Lib it!</button>
+    </form>
+
+    <p>Generated story: 
+    <span id="story"></span>
+    </p>
+
+    <script>
+        const form = document.getElementById('libform');
+        const storyElement = document.getElementById('story');
+        const libButton = document.getElementById('lib-button');
+        
+        let userInputs = {};
+        
+        const storyTemplates = [
+            "One day, {person} found a {adjective} {noun} and decided to {verb} with it at {place}.",
+            "While visiting {place}, {person} saw a {adjective} {noun} and couldn't resist the urge to {verb}.",
+            "The {adjective} {noun} belonged to {person}, who liked to {verb} at {place} every Tuesday.",
+            "Everyone at {place} was shocked when {person} brought a {adjective} {noun} and started to {verb}.",
+            "The legend says that at {place}, a {adjective} {noun} appears whenever {person} decides to {verb}."
+        ];
+        
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const noun = document.getElementById('noun').value.trim();
+            const adjective = document.getElementById('adjective').value.trim();
+            const person = document.getElementById('person').value.trim();
+            const verb = document.getElementById('verb').value.trim();
+            const place = document.getElementById('place').value.trim();
+            
+            if (!noun || !adjective || !person || !verb || !place) {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            userInputs = { noun, adjective, person, verb, place };
+
+            generateStory();
+        });
+        
+        function generateStory() {
+            const randomIndex = Math.floor(Math.random() * storyTemplates.length);
+            const template = storyTemplates[randomIndex];
+            
+            const story = template
+                .replace('{noun}', userInputs.noun)
+                .replace('{adjective}', userInputs.adjective)
+                .replace('{person}', userInputs.person)
+                .replace('{verb}', userInputs.verb)
+                .replace('{place}', userInputs.place);
+            
+            storyElement.textContent = story;
+        }
+    </script>
+
+ </body>
+</html>
