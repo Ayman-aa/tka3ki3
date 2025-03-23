@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Color Guessing Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        #color-display {
+            background-color: #333;
+            height: 200px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #rgb-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .difficulty-btn, .reset-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .difficulty-btn:hover, .reset-btn:hover {
+            background-color: #3367d6;
+        }
+        .difficulty-btn.active {
+            background-color: #34a853;
+        }
+        #options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .color-option {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .color-option:hover {
+            transform: scale(1.05);
+        }
+        #message {
+            font-size: 20px;
+            font-weight: bold;
+            height: 30px;
+            margin: 15px 0;
+        }
+        #timer {
+            font-size: 18px;
+            color: #d23;
+            font-weight: bold;
+            visibility: hidden;
+        }
+        #rgb-input-container {
+            margin: 20px auto;
+            max-width: 600px;
+            display: none;
+        }
+        #rgb-input-container input {
+            width: 60px;
+            padding: 8px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #submit-rgb {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .score-display {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #text-options-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .text-option {
+            padding: 12px 20px;
+            background-color: #f8f8f8;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 16px;
+            width: 80%;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .text-option:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <h1>RGB Color Guessing Game</h1>
+    <p>Guess the color based on the RGB value:</p>
+    <div id="rgb-value"></div>
+    
+    <div class="controls">
+        <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+        <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+        <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+        <button class="reset-btn">New Colors</button>
+    </div>
+    
+    <div id="timer"></div>
+    <div id="message"></div>
+    
+    <div id="color-display"></div>
+    
+    <div id="options-container"></div>
+    <div id="text-options-container"></div>
+    
+    <div id="rgb-input-container">
+        R: <input type="number" id="r-input" min="0" max="255">
+        G: <input type="number" id="g-input" min="0" max="255">
+        B: <input type="number" id="b-input" min="0" max="255">
+        <button id="submit-rgb">Submit</button>
+    </div>
+    
+    <div class="score-display">
+        Score: <span id="score">0</span>
+    </div>
+    
+    <script>
+        let correctColor;
+        let options = [];
+        let difficulty = 'easy';
+        let score = 0;
+        let timerInterval;
+        
+        const colorDisplay = document.getElementById('color-display');
+        const rgbValue = document.getElementById('rgb-value');
+        const optionsContainer = document.getElementById('options-container');
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+        const resetButton = document.querySelector('.reset-btn');
+        const messageElement = document.getElementById('message');
+        const timerElement = document.getElementById('timer');
+        const rgbInputContainer = document.getElementById('rgb-input-container');
+        const rInput = document.getElementById('r-input');
+        const gInput = document.getElementById('g-input');
+        const bInput = document.getElementById('b-input');
+        const submitRgbButton = document.getElementById('submit-rgb');
+        const scoreElement = document.getElementById('score');
+        const textOptionsContainer = document.getElementById('text-options-container');
+        
+        function init() {
+            setupEventListeners();
+            startNewGame();
+        }
+        
+        function setupEventListeners() {
+            difficultyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    difficultyButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    difficulty = button.dataset.difficulty;
+                    startNewGame();
+                });
+            });
+            
+            resetButton.addEventListener('click', startNewGame);
+            
+            submitRgbButton.addEventListener('click', checkRgbInput);
+        }
+        
+        function generateRandomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        function startNewGame() {
+            clearInterval(timerInterval);
+            timerElement.style.visibility = 'hidden';
+            
+            messageElement.textContent = '';
+            correctColor = generateRandomColor();
+            colorDisplay.style.backgroundColor = correctColor;
+            rgbValue.textContent = correctColor;
+            
+            const rgbMatch = correctColor.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            const [_, r, g, b] = rgbMatch;
+            
+            rInput.value = '';
+            gInput.value = '';
+            bInput.value = '';
+            
+            generateOptions();
+        }
+        
+        function generateOptions() {
+            optionsContainer.innerHTML = '';
+            textOptionsContainer.innerHTML = '';
+            options = [];
+            
+            let numOptions;
+            
+            if (difficulty === 'easy') {
+                numOptions = 3;
+                rgbInputContainer.style.display = 'none';
+                optionsContainer.style.display = 'flex';
+                textOptionsContainer.style.display = 'none';
+            } else if (difficulty === 'medium') {
+                numOptions = 6;
+                rgbInputContainer.style.display = 'none';
+                optionsContainer.style.display = 'none';
+                textOptionsContainer.style.display = 'flex';
+            } else {
+                rgbInputContainer.style.display = 'block';
+                optionsContainer.style.display = 'none';
+                textOptionsContainer.style.display = 'none';
+                return;
+            }
+            
+            options.push(correctColor);
+            
+            for (let i = 1; i < numOptions; i++) {
+                let newColor;
+                do {
+                    newColor = generateRandomColor();
+                } while (options.includes(newColor));
+                
+                options.push(newColor);
+            }
+            
+            shuffleArray(options);
+            
+            if (difficulty === 'easy') {
+                options.forEach(color => {
+                    const option = document.createElement('div');
+                    option.classList.add('color-option');
+                    option.style.backgroundColor = color;
+                    
+                    option.addEventListener('click', () => {
+                        checkGuess(color);
+                    });
+                    
+                    optionsContainer.appendChild(option);
+                });
+            } else if (difficulty === 'medium') {
+                options.forEach(color => {
+                    const option = document.createElement('div');
+                    option.classList.add('text-option');
+                    option.textContent = color;
+                    
+                    option.addEventListener('click', () => {
+                        checkGuess(color);
+                    });
+                    
+                    textOptionsContainer.appendChild(option);
+                });
+            }
+        }
+        
+        function checkGuess(guessedColor) {
+            if (guessedColor === correctColor) {
+                handleCorrectGuess();
+            } else {
+                handleIncorrectGuess();
+            }
+        }
+        
+        function checkRgbInput() {
+            const rValue = parseInt(rInput.value);
+            const gValue = parseInt(gInput.value);
+            const bValue = parseInt(bInput.value);
+            
+            if (isNaN(rValue) || isNaN(gValue) || isNaN(bValue) || 
+                rValue < 0 || rValue > 255 || 
+                gValue < 0 || gValue > 255 || 
+                bValue < 0 || bValue > 255) {
+                messageElement.textContent = 'Please enter valid RGB values (0-255)';
+                messageElement.style.color = '#d23';
+                return;
+            }
+            
+            const rgbMatch = correctColor.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            const [_, correctR, correctG, correctB] = rgbMatch;
+            
+            if (rValue == correctR && gValue == correctG && bValue == correctB) {
+                handleCorrectGuess();
+            } else {
+                handleIncorrectGuess();
+                
+                const totalDifference = Math.abs(rValue - correctR) + Math.abs(gValue - correctG) + Math.abs(bValue - correctB);
+                if (totalDifference <= 30) {
+                    messageElement.textContent = 'Very close! Try again.';
+                } else if (totalDifference <= 100) {
+                    messageElement.textContent = 'Getting closer! Try again.';
+                } else {
+                    messageElement.textContent = 'Not quite right. Try again.';
+                }
+            }
+        }
+        
+        function handleCorrectGuess() {
+            messageElement.textContent = 'Correct!';
+            messageElement.style.color = '#2ecc71';
+            
+            score++;
+            scoreElement.textContent = score;
+            
+            startCountdownTimer();
+        }
+        
+        function handleIncorrectGuess() {
+            messageElement.textContent = 'Try Again!';
+            messageElement.style.color = '#e74c3c';
+        }
+        
+        function startCountdownTimer() {
+            let timeLeft = 5;
+            timerElement.style.visibility = 'visible';
+            timerElement.textContent = `Next color in ${timeLeft} seconds`;
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Next color in ${timeLeft} seconds`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    startNewGame();
+                }
+            }, 1000);
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

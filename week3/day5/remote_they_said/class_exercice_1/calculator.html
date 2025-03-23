@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        
+        .calculator {
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            padding: 20px;
+        }
+        
+        .display {
+            background-color: #eaeaea;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: right;
+            font-size: 1.8rem;
+            min-height: 1.8rem;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4a4a4a;
+            color: white;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #5a5a5a;
+        }
+        
+        button:active {
+            background-color: #3a3a3a;
+        }
+        
+        .operator {
+            background-color: #ff9500;
+        }
+        
+        .operator:hover {
+            background-color: #ffaa33;
+        }
+        
+        .memory {
+            background-color: #5d6d7e;
+        }
+        
+        .memory:hover {
+            background-color: #6e7e8e;
+        }
+        
+        .clear, .equals {
+            grid-column: span 2;
+        }
+        
+        .equals {
+            background-color: #28a745;
+        }
+        
+        .equals:hover {
+            background-color: #34b754;
+        }
+        
+        .clear {
+            background-color: #dc3545;
+        }
+        
+        .clear:hover {
+            background-color: #e34553;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="memory" id="mc">MC</button>
+            <button class="memory" id="mr">MR</button>
+            <button class="memory" id="m-plus">M+</button>
+            <button class="memory" id="m-minus">M-</button>
+            
+            <button class="clear" id="clear">C</button>
+            <button id="backspace">⌫</button>
+            <button class="operator" id="divide">÷</button>
+            
+            <button id="seven">7</button>
+            <button id="eight">8</button>
+            <button id="nine">9</button>
+            <button class="operator" id="multiply">×</button>
+            
+            <button id="four">4</button>
+            <button id="five">5</button>
+            <button id="six">6</button>
+            <button class="operator" id="subtract">-</button>
+            
+            <button id="one">1</button>
+            <button id="two">2</button>
+            <button id="three">3</button>
+            <button class="operator" id="add">+</button>
+            
+            <button id="zero" style="grid-column: span 2;">0</button>
+            <button id="decimal">.</button>
+            <button class="equals" id="equals">=</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const display = document.getElementById('display');
+            const buttons = document.querySelectorAll('button');
+            
+            let currentInput = '0';
+            let previousInput = '';
+            let operation = null;
+            let shouldResetDisplay = false;
+            let memoryValue = 0;
+            
+            function updateDisplay() {
+                display.textContent = currentInput;
+            }
+            
+            function inputDigit(digit) {
+                if (shouldResetDisplay) {
+                    currentInput = digit;
+                    shouldResetDisplay = false;
+                } else {
+                    currentInput = currentInput === '0' ? digit : currentInput + digit;
+                }
+                updateDisplay();
+            }
+            
+            function inputDecimal() {
+                if (shouldResetDisplay) {
+                    currentInput = '0.';
+                    shouldResetDisplay = false;
+                } else if (!currentInput.includes('.')) {
+                    currentInput += '.';
+                }
+                updateDisplay();
+            }
+            
+            function handleOperator(nextOperator) {
+                const inputValue = parseFloat(currentInput);
+                
+                if (operation && shouldResetDisplay) {
+                    operation = nextOperator;
+                    return;
+                }
+                
+                if (previousInput === '') {
+                    previousInput = currentInput;
+                } else if (operation) {
+                    const result = calculate();
+                    currentInput = String(result);
+                    previousInput = currentInput;
+                    updateDisplay();
+                }
+                
+                shouldResetDisplay = true;
+                operation = nextOperator;
+            }
+            
+            function calculate() {
+                const prev = parseFloat(previousInput);
+                const current = parseFloat(currentInput);
+                
+                if (isNaN(prev) || isNaN(current)) return current;
+                
+                let result;
+                switch (operation) {
+                    case '+':
+                        result = prev + current;
+                        break;
+                    case '-':
+                        result = prev - current;
+                        break;
+                    case '×':
+                        result = prev * current;
+                        break;
+                    case '÷':
+                        result = current === 0 ? "Error" : prev / current;
+                        break;
+                    default:
+                        return current;
+                }
+                
+                if (result === "Error") return result;
+                return Math.round(result * 1000000) / 1000000;
+            }
+            
+            function handleEquals() {
+                if (!operation) return;
+                
+                const result = calculate();
+                currentInput = String(result);
+                previousInput = '';
+                operation = null;
+                shouldResetDisplay = true;
+                updateDisplay();
+            }
+            
+            function resetCalculator() {
+                currentInput = '0';
+                previousInput = '';
+                operation = null;
+                shouldResetDisplay = false;
+                updateDisplay();
+            }
+            
+            function handleBackspace() {
+                if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
+                    currentInput = '0';
+                } else {
+                    currentInput = currentInput.slice(0, -1);
+                }
+                updateDisplay();
+            }
+            
+            function memoryClear() {
+                memoryValue = 0;
+            }
+            
+            function memoryRecall() {
+                currentInput = String(memoryValue);
+                shouldResetDisplay = false;
+                updateDisplay();
+            }
+            
+            function memoryAdd() {
+                memoryValue += parseFloat(currentInput);
+                shouldResetDisplay = true;
+            }
+            
+            function memorySubtract() {
+                memoryValue -= parseFloat(currentInput);
+                shouldResetDisplay = true;
+            }
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const buttonId = button.id;
+                    
+                    if (buttonId === 'zero') inputDigit('0');
+                    else if (buttonId === 'one') inputDigit('1');
+                    else if (buttonId === 'two') inputDigit('2');
+                    else if (buttonId === 'three') inputDigit('3');
+                    else if (buttonId === 'four') inputDigit('4');
+                    else if (buttonId === 'five') inputDigit('5');
+                    else if (buttonId === 'six') inputDigit('6');
+                    else if (buttonId === 'seven') inputDigit('7');
+                    else if (buttonId === 'eight') inputDigit('8');
+                    else if (buttonId === 'nine') inputDigit('9');
+                    
+                    else if (buttonId === 'add') handleOperator('+');
+                    else if (buttonId === 'subtract') handleOperator('-');
+                    else if (buttonId === 'multiply') handleOperator('×');
+                    else if (buttonId === 'divide') handleOperator('÷');
+                    
+                    else if (buttonId === 'equals') handleEquals();
+                    
+                    else if (buttonId === 'decimal') inputDecimal();
+                    
+                    else if (buttonId === 'clear') resetCalculator();
+                    
+                    else if (buttonId === 'backspace') handleBackspace();
+                    
+                    else if (buttonId === 'mc') memoryClear();
+                    else if (buttonId === 'mr') memoryRecall();
+                    else if (buttonId === 'm-plus') memoryAdd();
+                    else if (buttonId === 'm-minus') memorySubtract();
+                });
+            });
+            
+            document.addEventListener('keydown', function(event) {
+                if (/^[0-9]$/.test(event.key)) {
+                    inputDigit(event.key);
+                }
+                else if (event.key === '+') handleOperator('+');
+                else if (event.key === '-') handleOperator('-');
+                else if (event.key === '*') handleOperator('×');
+                else if (event.key === '/') {
+                    event.preventDefault();
+                    handleOperator('÷');
+                }
+                else if (event.key === '=' || event.key === 'Enter') {
+                    event.preventDefault();
+                    handleEquals();
+                }
+                else if (event.key === '.') inputDecimal();
+                else if (event.key === 'Backspace') handleBackspace();
+                else if (event.key === 'Escape') resetCalculator();
+            });
+            
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>
