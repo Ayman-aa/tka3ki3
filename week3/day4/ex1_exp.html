@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <select id="genres">
+            <option value="rock">Rock</option>
+            <option value="blues" selected>Blues</option>
+            <option value="classic">Classic</option>
+        </select>
+        <script>
+            document.getElementById('genres').addEventListener('change', function() {
+                alert(this.value);
+            });
+            document.getElementById('genres').value = 'classic';
+        </script>
+    </body>
+</html>

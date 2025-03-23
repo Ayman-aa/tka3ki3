@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="root"></div>
+        <script>
+            let shoppingList = [];
+
+            function createUI() {
+                const root = document.getElementById("root");
+                
+                const form = document.createElement("form");
+                form.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    addItem();
+                });
+                
+                const input = document.createElement("input");
+                input.type = "text";
+                input.id = "itemInput";
+                input.placeholder = "Enter item to buy";
+                
+                const addButton = document.createElement("button");
+                addButton.type = "submit";
+                addButton.textContent = "Add Item";
+                
+                const clearButton = document.createElement("button");
+                clearButton.type = "button";
+                clearButton.textContent = "Clear All";
+                clearButton.addEventListener("click", clearAll);
+                
+                const listDisplay = document.createElement("div");
+                listDisplay.id = "listDisplay";
+                
+                form.appendChild(input);
+                form.appendChild(addButton);
+                root.appendChild(form);
+                root.appendChild(clearButton);
+                root.appendChild(listDisplay);
+                
+                updateDisplay();
+            }
+
+            function addItem() {
+                const inputField = document.getElementById("itemInput");
+                const newItem = inputField.value.trim();
+                
+                if (newItem !== "") {
+                    shoppingList.push(newItem);
+                    inputField.value = "";
+                    updateDisplay();
+                }
+            }
+
+            function clearAll() {
+                shoppingList = [];
+                updateDisplay();
+            }
+    
+            function updateDisplay() {
+                const listDisplay = document.getElementById("listDisplay");
+                listDisplay.innerHTML = "<h3>Shopping List:</h3>";
+                
+                if (shoppingList.length === 0) {
+                    listDisplay.innerHTML += "<p>No items in the list</p>";
+                } else {
+                    const ul = document.createElement("ul");
+                    shoppingList.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = item;
+                        ul.appendChild(li);
+                    });
+                    listDisplay.appendChild(ul);
+                }
+            }
+            
+            // Initialize the UI when the page loads
+            window.onload = createUI;
+        </script>
+    </body>
+</html>
