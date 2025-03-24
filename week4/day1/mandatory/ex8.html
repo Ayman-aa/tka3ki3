@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juice Bar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        h2 {
+            margin-top: 30px;
+            color: #2196F3;
+        }
+        #output1, #output2 {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juice Bar</h1>
+
+    <h2>Part I</h2>
+    <div id="output1"></div>
+
+    <h2>Part II</h2>
+    <div id="output2"></div>
+
+    <script>
+        // Part I: Simple nested function
+        function makeJuice(size) {
+            function addIngredients(ingredient1, ingredient2, ingredient3) {
+                const output = document.getElementById('output1');
+                output.innerHTML = `The client wants a ${size} juice, containing ${ingredient1}, ${ingredient2}, ${ingredient3}.`;
+            }
+            
+            // Invoke the inner function once
+            addIngredients('strawberries', 'banana', 'orange');
+        }
+        
+        // Invoke the outer function in the global scope
+        makeJuice('medium');
+        
+        
+        // Part II: Enhanced with array and multiple invocations
+        function makeJuice(size) {
+            // Create empty ingredients array
+            const ingredients = [];
+            
+            // Inner function to add ingredients
+            function addIngredients(ingredient1, ingredient2, ingredient3) {
+                ingredients.push(ingredient1, ingredient2, ingredient3);
+            }
+            
+            // Inner function to display the juice
+            function displayJuice() {
+                const output = document.getElementById('output2');
+                output.innerHTML = `The client wants a ${size} juice, containing ${ingredients.join(', ')}.`;
+            }
+            
+            // Invoke addIngredients twice for 6 ingredients
+            addIngredients('strawberries', 'banana', 'orange');
+            addIngredients('apple', 'kiwi', 'pineapple');
+            
+            // Invoke displayJuice once
+            displayJuice();
+        }
+        
+        // Invoke the makeJuice function in the global scope
+        makeJuice('large');
+    </script>
+</body>
+</html>

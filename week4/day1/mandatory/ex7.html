@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Website</title>
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            color: white;
+            padding: 0 20px;
+            height: 60px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">Website Name</div>
+        <ul class="nav-menu">
+            <li>Home</li>
+            <li>About</li>
+            <li>Services</li>
+            <li>Contact</li>
+        </ul>
+    </nav>
+
+    <script>
+    (function(username) {
+        const userProfileDiv = document.createElement('div');
+        userProfileDiv.className = 'user-profile';
+        
+        const profileImg = document.createElement('img');
+        profileImg.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(username) + '&background=random';
+        profileImg.alt = username + '\'s profile';
+        
+        const welcomeText = document.createElement('span');
+        welcomeText.textContent = 'Welcome, ' + username + '!';
+        
+        userProfileDiv.appendChild(profileImg);
+        userProfileDiv.appendChild(welcomeText);
+        
+        const navbar = document.querySelector('.navbar');
+        navbar.appendChild(userProfileDiv);
+        
+        console.log('User profile for ' + username + ' has been added to the navbar');
+})('John');
+    </script>
+</body>
+</html>
