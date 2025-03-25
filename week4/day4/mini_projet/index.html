@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Quote Generator</h1>
+    
+    <section id="quote-section" class="quote-container">
+        <div id="quote-display">
+            <p class="quote-text" id="quote-text"></p>
+            <p class="quote-author" id="quote-author"></p>
+            <p class="likes-count hidden" id="likes-count"></p>
+        </div>
+    </section>
+    
+    <div class="buttons-container">
+        <button id="generate-btn">Generate Quote</button>
+        
+        <button id="char-count-btn">Character Count (with spaces)</button>
+        <button id="char-count-no-spaces-btn">Character Count (no spaces)</button>
+        <button id="word-count-btn">Word Count</button>
+        <button id="like-btn">Like</button>
+    </div>
+    
+    <div id="info-display" class="info-text hidden"></div>
+    
+    <div class="form-container">
+        <h3>Add New Quote</h3>
+        <form id="add-quote-form">
+            <label for="quote-input">Quote:</label>
+            <textarea id="quote-input" rows="4" required></textarea>
+            
+            <label for="author-input">Author:</label>
+            <input type="text" id="author-input" required>
+            
+            <button type="submit">Add Quote</button>
+        </form>
+    </div>
+    
+    <div class="form-container">
+        <h3>Filter Quotes by Author</h3>
+        <form id="filter-form">
+            <label for="author-filter">Author Name:</label>
+            <input type="text" id="author-filter" required>
+            
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+    
+    <div id="filtered-quotes-container" class="hidden">
+        <h3>Filtered Quotes</h3>
+        <div id="filtered-quote" class="quote-container">
+            <p class="quote-text" id="filtered-quote-text"></p>
+            <p class="quote-author" id="filtered-quote-author"></p>
+        </div>
+        
+        <div class="navigation-buttons">
+            <button id="prev-btn">Previous</button>
+            <button id="next-btn">Next</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+[
+    {
+      "id": 0,
+      "author": "Albert Einstein",
+      "quote": "Imagination is more important than knowledge.",
+      "likes": 0
+    },
+    {
+      "id": 1,
+      "author": "Maya Angelou",
+      "quote": "I've learned that people will forget what you said, people will forget what you did, but people will never forget how you made them feel.",
+      "likes": 0
+    },
+    {
+      "id": 2,
+      "author": "Steve Jobs",
+      "quote": "Your time is limited, so don't waste it living someone else's life.",
+      "likes": 0
+    },
+    {
+      "id": 3,
+      "author": "Oscar Wilde",
+      "quote": "Be yourself; everyone else is already taken.",
+      "likes": 0
+    },
+    {
+      "id": 4,
+      "author": "Nelson Mandela",
+      "quote": "It always seems impossible until it's done.",
+      "likes": 0
+    },
+    {
+      "id": 5,
+      "author": "Maya Angelou",
+      "quote": "If you don't like something, change it. If you can't change it, change your attitude.",
+      "likes": 0
+    }
+  ]
