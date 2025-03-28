@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Super Tic-Tac-Toe Challenge!</h1>
+    
+    <div class="game-container">
+        <div class="score-container">
+            <div class="score-box" id="player-box">You: <span id="player-score">0</span><span class="emoji">😎</span></div>
+            <div class="score-box" id="ties-box">Ties: <span id="ties">0</span><span class="emoji">🤝</span></div>
+            <div class="score-box" id="computer-box">Computer: <span id="computer-score">0</span><span class="emoji">🤖</span></div>
+        </div>
+        
+        <div class="options">
+            <p>Choose your power symbol:</p>
+            <button id="select-x">X</button>
+            <button id="select-o">O</button>
+        </div>
+        
+        <div class="difficulty">
+            <p>Select challenge level:</p>
+            <div style="display: flex;">
+                <button id="easy-mode" class="active">Easy Peasy 🙂</button>
+                <button id="hard-mode">Impossible! 😈</button>
+            </div>
+        </div>
+        
+        <div id="message">Pick a symbol and start playing!</div>
+        
+        <div class="board">
+            <div class="cell" id="cell-0"></div>
+            <div class="cell" id="cell-1"></div>
+            <div class="cell" id="cell-2"></div>
+            <div class="cell" id="cell-3"></div>
+            <div class="cell" id="cell-4"></div>
+            <div class="cell" id="cell-5"></div>
+            <div class="cell" id="cell-6"></div>
+            <div class="cell" id="cell-7"></div>
+            <div class="cell" id="cell-8"></div>
+        </div>
+        
+        <button id="restart-btn">Play Again! 🔄</button>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

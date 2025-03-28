@@ -1,0 +1,229 @@
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    background-image: radial-gradient(circle, #ffffff, #f0f0f0);
+    min-height: 100vh;
+    transition: background-color 0.5s;
+}
+h1 {
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+.game-container {
+    margin: 20px auto;
+    max-width: 420px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transform: translateY(0);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.game-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+    perspective: 1000px;
+}
+.cell {
+    width: 110px;
+    height: 110px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+}
+.cell:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+.cell.x-mark {
+    color: #e74c3c;
+}
+.cell.o-mark {
+    color: #3498db;
+}
+.cell.win-cell {
+    animation: winner 0.8s ease infinite alternate;
+    background-color: #c8ffc1;
+}
+@keyframes winner {
+    from {transform: scale(1.0);}
+    to {transform: scale(1.1); box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);}
+}
+.options, .difficulty {
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+.options p, .difficulty p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.options button, .difficulty button, #restart-btn {
+    margin: 0 10px;
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    box-shadow: 0 4px 0px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+.options button:hover, .difficulty button:hover, #restart-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0px rgba(0,0,0,0.2);
+}
+.options button:active, .difficulty button:active, #restart-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0px rgba(0,0,0,0.2);
+}
+.options button {
+    background-color: #4CAF50;
+    color: white;
+}
+.options button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255,255,255,.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+.options button:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+.difficulty button {
+    background-color: #2196F3;
+    color: white;
+}
+#restart-btn {
+    background-color: #f44336;
+    color: white;
+    display: none;
+}
+#message {
+    font-size: 28px;
+    margin: 20px 0;
+    min-height: 40px;
+    color: #333;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+.active {
+    border: 3px solid #333 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2) !important;
+}
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 1;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    20%, 60% {transform: translateX(-5px);}
+    40%, 80% {transform: translateX(5px);}
+}
+@keyframes rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+.animate-win {
+    animation: pulse 0.5s ease infinite;
+}
+.animate-loss {
+    animation: shake 0.5s ease;
+}
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    border-radius: 0;
+    opacity: 0;
+    z-index: -1;
+}
+.score-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+.score-box {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+.score-box:hover {
+    transform: scale(1.05);
+}
+#player-score {
+    color: #e74c3c;
+}
+#computer-score {
+    color: #3498db;
+}
+#ties {
+    color: #9b59b6;
+}
+.emoji {
+    font-size: 22px;
+    margin-left: 5px;
+}
