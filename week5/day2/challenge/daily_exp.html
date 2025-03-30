@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise Time Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .city {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .city h2 {
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            grid-column: span 2;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Compare Sunrise Times</h1>
+    <form id="sunriseForm">
+        <div class="city">
+            <h2>City 1</h2>
+            <label for="lat1">Latitude:</label>
+            <input type="text" id="lat1" value="48.864716" required>
+            
+            <label for="lng1">Longitude:</label>
+            <input type="text" id="lng1" value="2.349014" required>
+            <p><small>Default: Paris</small></p>
+        </div>
+        
+        <div class="city">
+            <h2>City 2</h2>
+            <label for="lat2">Latitude:</label>
+            <input type="text" id="lat2" value="40.730610" required>
+            
+            <label for="lng2">Longitude:</label>
+            <input type="text" id="lng2" value="-73.935242" required>
+            <p><small>Default: New York</small></p>
+        </div>
+        
+        <button type="submit">Compare Sunrise Times</button>
+    </form>
+    
+    <div id="results"></div>
+    
+    <script>
+        document.getElementById('sunriseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const lat1 = document.getElementById('lat1').value;
+            const lng1 = document.getElementById('lng1').value;
+            const lat2 = document.getElementById('lat2').value;
+            const lng2 = document.getElementById('lng2').value;
+            
+            const url1 = `https://api.sunrise-sunset.org/json?lat=${lat1}&lng=${lng1}&formatted=0`;
+            const url2 = `https://api.sunrise-sunset.org/json?lat=${lat2}&lng=${lng2}&formatted=0`;
+            
+            // Show loading message
+            const results = document.getElementById('results');
+            results.style.display = 'block';
+            results.innerHTML = 'Loading...';
+            
+            Promise.all([
+                fetch(url1).then(response => response.json()),
+                fetch(url2).then(response => response.json())
+            ])
+            .then(([data1, data2]) => {
+                const sunrise1 = new Date(data1.results.sunrise);
+                const sunrise2 = new Date(data2.results.sunrise);
+                
+                const options = { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit', 
+                    timeZoneName: 'short' 
+                };
+                
+                results.innerHTML = `
+                    <h3>Sunrise Times:</h3>
+                    <p><strong>City 1 (${lat1}, ${lng1}):</strong> ${sunrise1.toLocaleTimeString(undefined, options)}</p>
+                    <p><strong>City 2 (${lat2}, ${lng2}):</strong> ${sunrise2.toLocaleTimeString(undefined, options)}</p>
+                    <p><strong>Time Difference:</strong> ${Math.abs((sunrise1 - sunrise2) / (1000 * 60))} minutes</p>
+                `;
+            })
+            .catch(error => {
+                results.innerHTML = `<p>Error: ${error.message}</p>`;
+                console.error('Error fetching sunrise data:', error);
+            });
+        });
+    </script>
+</body>
+</html>
