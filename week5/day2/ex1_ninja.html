@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giphy Search App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #clear-gifs {
+            background-color: #f44336;
+        }
+
+        #clear-gifs:hover {
+            background-color: #d32f2f;
+        }
+
+        .gif-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .gif-container {
+            position: relative;
+            width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .gif-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .error {
+            color: #f44336;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Giphy Search App</h1>
+        <form id="gif-form">
+            <input type="text" id="category" placeholder="Enter a category" required>
+            <button type="submit">Search GIFs</button>
+            <button type="button" id="clear-gifs">Delete All GIFs</button>
+        </form>
+        <div id="gif-display" class="gif-display"></div>
+    </div>
+
+    <script>
+        const API_KEY = 'hpvZycW22qCjn5cRM1xtWB8NKq4dQ2My';
+        const GIPHY_API_URL = 'https://api.giphy.com/v1/gifs/search';
+
+        const form = document.getElementById('gif-form');
+        const categoryInput = document.getElementById('category');
+        const gifDisplay = document.getElementById('gif-display');
+        const clearButton = document.getElementById('clear-gifs');
+
+        form.addEventListener('submit', fetchGifs);
+        clearButton.addEventListener('click', clearGifs);
+
+        async function fetchGifs(event) {
+            event.preventDefault();
+            
+            const category = categoryInput.value.trim();
+            if (!category) return;
+
+            displayLoading();
+            
+            try {
+                const url = `${GIPHY_API_URL}?q=${encodeURIComponent(category)}&api_key=${API_KEY}&limit=12`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayGifs(data.data);
+                
+            } catch (error) {
+                console.error("Error fetching GIFs:", error);
+                displayError("Something went wrong fetching the GIFs. Please try again.");
+            }
+        }
+
+        function displayGifs(gifs) {
+            // Clear loading state
+            gifDisplay.innerHTML = '';
+            
+            if (gifs.length === 0) {
+                gifDisplay.innerHTML = '<p>No GIFs found for this category.</p>';
+                return;
+            }
+            
+            gifs.forEach(gif => {
+                const gifUrl = gif.images.fixed_height.url;
+                const gifContainer = document.createElement('div');
+                gifContainer.className = 'gif-container';
+                
+                const gifImg = document.createElement('img');
+                gifImg.src = gifUrl;
+                gifImg.alt = gif.title || 'Giphy GIF';
+                
+                gifContainer.appendChild(gifImg);
+                gifDisplay.appendChild(gifContainer);
+            });
+        }
+
+        function displayLoading() {
+            gifDisplay.innerHTML = '<div class="loading">Loading GIFs...</div>';
+        }
+
+        function displayError(message) {
+            gifDisplay.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function clearGifs() {
+            gifDisplay.innerHTML = '';
+            categoryInput.value = '';
+        }
+    </script>
+</body>
+</html>
