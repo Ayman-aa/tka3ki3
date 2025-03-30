@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Explorer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            color: #333;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #1da1f2;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #657786;
+            font-size: 1.1rem;
+        }
+        
+        .search-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #1da1f2;
+        }
+        
+        .btn {
+            cursor: pointer;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #1da1f2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0c8ad6;
+        }
+        
+        .btn-danger {
+            background-color: #e0245e;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c5173f;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .gif-stats {
+            color: #657786;
+            font-weight: 500;
+        }
+        
+        .gif-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .gif-item {
+            position: relative;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .gif-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gif-image {
+            width: 100%;
+            display: block;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(224, 36, 94, 0.9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c5173f;
+        }
+        
+        .loading {
+            display: none;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(29, 161, 242, 0.2);
+            border-radius: 50%;
+            border-top-color: #1da1f2;
+            animation: spin 1s linear infinite;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #657786;
+            font-size: 1.2rem;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .gif-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GIF Explorer</h1>
+        <p>Search for random GIFs from any category</p>
+    </div>
+    
+    <div class="search-container">
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Type a category (e.g., cats, nature, funny)">
+            <button type="submit" class="btn btn-primary">Find Random GIF</button>
+        </form>
+    </div>
+    
+    <div class="actions">
+        <div class="gif-stats" id="gif-stats">No GIFs added yet</div>
+        <button id="delete-all-btn" class="btn btn-danger" disabled>DELETE ALL</button>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <div class="no-results" id="no-results">
+        No GIFs found for that search. Try another category!
+    </div>
+    
+    <div id="gif-container" class="gif-container"></div>
+    
+    <script>
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const gifContainer = document.getElementById('gif-container');
+        const deleteAllBtn = document.getElementById('delete-all-btn');
+        const gifStats = document.getElementById('gif-stats');
+        const loadingIndicator = document.getElementById('loading');
+        const noResultsElement = document.getElementById('no-results');
+        
+        const apiKey = 'hpvZycW22qCjn5cRM1xtWB8NKq4dQ2My';
+        
+        let gifCount = 0;
+        
+        searchForm.addEventListener('submit', handleSearch);
+        deleteAllBtn.addEventListener('click', deleteAllGifs);
+        
+
+        function handleSearch(event) {
+            event.preventDefault();
+            
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm) {
+                shakeElement(searchInput);
+                return;
+            }
+            
+            showLoading(true);
+            noResultsElement.style.display = 'none';
+            fetchRandomGif(searchTerm);
+        }
+        
+
+        function fetchRandomGif(searchTerm) {
+            const url = `https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=${encodeURIComponent(searchTerm)}&rating=g`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showLoading(false);
+                    if (data.data && data.data.images && data.data.images.original.url) {
+                        appendGif(data.data.images.original.url, searchTerm);
+                        noResultsElement.style.display = 'none';
+                    } else {
+                        noResultsElement.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    showLoading(false);
+                    console.error('Error fetching GIF:', error);
+                    alert('Error fetching GIF. Please try again later.');
+                });
+        }
+
+        function appendGif(gifUrl, searchTerm) {
+            const gifItem = document.createElement('div');
+            gifItem.className = 'gif-item';
+            
+            const gifImage = document.createElement('img');
+            gifImage.src = gifUrl;
+            gifImage.alt = `${searchTerm} GIF`;
+            gifImage.className = 'gif-image';
+            
+            gifImage.style.opacity = '0';
+            gifImage.onload = () => {
+                gifImage.style.transition = 'opacity 0.3s';
+                gifImage.style.opacity = '1';
+            };
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-btn';
+            deleteButton.textContent = 'DELETE';
+            deleteButton.addEventListener('click', () => {
+                gifItem.style.opacity = '0';
+                setTimeout(() => {
+                    gifContainer.removeChild(gifItem);
+                    gifCount--;
+                    updateGifStats();
+                }, 300);
+            });
+            
+            gifItem.appendChild(gifImage);
+            gifItem.appendChild(deleteButton);
+            gifContainer.prepend(gifItem); 
+            gifCount++;
+            updateGifStats();
+            
+            searchInput.value = '';
+        }
+
+        function deleteAllGifs() {
+            if (gifCount === 0) return;
+            
+            const gifItems = document.querySelectorAll('.gif-item');
+            gifItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    setTimeout(() => {
+                        if (gifContainer.contains(item)) {
+                            gifContainer.removeChild(item);
+                        }
+                    }, 300);
+                }, index * 100); // Stagger the animation for visual effect
+            });
+            
+            gifCount = 0;
+            updateGifStats();
+        }
+
+        function updateGifStats() {
+            if (gifCount === 0) {
+                gifStats.textContent = 'No GIFs added yet';
+                deleteAllBtn.disabled = true;
+            } else {
+                gifStats.textContent = `${gifCount} GIF${gifCount === 1 ? '' : 's'} displayed`;
+                deleteAllBtn.disabled = false;
+            }
+        }
+
+        function showLoading(isLoading) {
+            loadingIndicator.style.display = isLoading ? 'flex' : 'none';
+        }
+
+        function shakeElement(element) {
+            element.classList.add('error');
+            element.style.animation = 'shake 0.5s';
+            element.style.borderColor = '#e0245e';
+            
+            setTimeout(() => {
+                element.style.animation = '';
+                element.style.borderColor = '#e1e8ed';
+            }, 500);
+        }
+        
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(`
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `, styleSheet.cssRules.length);
+    </script>
+</body>
+</html>
