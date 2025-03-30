@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://loodibee.com/wp-content/uploads/International-Pokemon-logo.png" alt="Pokemon Logo" class="logo">
+        </div>
+        
+        <div class="pokedex">
+            <div class="pokedex-top">
+                <div class="lights-container">
+                    <div class="big-light">
+                        <div class="big-light-reflection"></div>
+                    </div>
+                    <div class="small-lights">
+                        <div class="small-light red"></div>
+                        <div class="small-light yellow"></div>
+                        <div class="small-light green"></div>
+                    </div>
+                </div>
+                
+                <div class="screen-container">
+                    <div class="screen-border">
+                        <div class="screen">
+                            <div class="loading-container">
+                                <div class="pokeball-loading">
+                                    <div class="pokeball-loading-inner"></div>
+                                </div>
+                            </div>
+                            <img src="" alt="Pokemon" class="pokemon-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-buttons">
+                    <div class="small-button"></div>
+                </div>
+            </div>
+            
+            <div class="pokedex-hinge"></div>
+            
+            <div class="pokedex-bottom">
+                <div class="controls-left">
+                    <div class="d-pad">
+                        <div class="d-pad-up"></div>
+                        <div class="d-pad-right"></div>
+                        <div class="d-pad-down"></div>
+                        <div class="d-pad-left"></div>
+                        <div class="d-pad-center"></div>
+                    </div>
+                    <div class="indicator-light"></div>
+                </div>
+                
+                <div class="info-display">
+                    <h3 class="pokemon-name">???</h3>
+                    <p class="pokemon-id">Pokémon n° ???</p>
+                    <p class="pokemon-height">Height: ???</p>
+                    <p class="pokemon-weight">Weight: ???</p>
+                    <p class="pokemon-types">Type: <span class="types-list">???</span></p>
+                </div>
+                
+                <div class="controls-right">
+                    <div class="green-button">
+                        <div class="green-button-inner"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>How to use:</h3>
+                <p>1- Press the <span class="green-text">green</span> button to get a random Pokémon</p>
+                <p>2- Press the <span class="left-text">left</span> and <span class="right-text">right</span> buttons to see previous and next Pokémon.</p>
+            </div>
+            
+            <div class="error-message">
+                Oh no! That Pokémon isn't available...
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
