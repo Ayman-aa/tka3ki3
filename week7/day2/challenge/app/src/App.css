@@ -1,0 +1,51 @@
+.App {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.carousel-container {
+  margin: 0 auto;
+  max-width: 800px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Override some of the carousel default styles */
+.carousel .slide .legend {
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: 18px;
+  padding: 10px;
+  opacity: 0.8;
+  bottom: 40px;
+  transition: all 0.5s ease;
+}
+
+.carousel:hover .slide .legend {
+  opacity: 1;
+}
+
+.carousel .control-dots .dot {
+  box-shadow: none;
+  background: #2c3e50;
+  width: 10px;
+  height: 10px;
+}
+
+.carousel .thumb {
+  border: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.carousel .thumb.selected, 
+.carousel .thumb:hover {
+  border: 3px solid #2c3e50;
+}
