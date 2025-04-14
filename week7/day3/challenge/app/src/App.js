@@ -1,80 +1,81 @@
-import { useState, useRef } from 'react';
-import './VotingApp.css'; // Make sure to import the CSS file
+import React, { useState } from 'react';
+import FormComponent from './FormComponent';
 
-export default function App() {
-  const [languages, setLanguages] = useState([
-    {name: "Php", votes: 0},
-    {name: "Python", votes: 0},
-    {name: "JavaSript", votes: 0},
-    {name: "Java", votes: 0}
-  ]);
-  
-  // Refs to track which language was voted for animation
-  const resultRefs = useRef(languages.map(() => null));
+function App() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    age: '',
+    gender: '',
+    destination: '',
+    nutsFree: false,
+    lactoseFree: false,
+    vegan: false
+  });
 
-  const handleVote = (index) => {
-    const updatedLanguages = [...languages];
-    updatedLanguages[index] = {
-      ...updatedLanguages[index],
-      votes: updatedLanguages[index].votes + 1
-    };
-    setLanguages(updatedLanguages);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
     
-    if (resultRefs.current[index]) {
-      resultRefs.current[index].classList.add('vote-changed');
-      setTimeout(() => {
-        if (resultRefs.current[index]) {
-          resultRefs.current[index].classList.remove('vote-changed');
-        }
-      }, 500);
-    }
+    // For checkboxes, use the checked property; otherwise use the value
+    const newValue = type === 'checkbox' ? checked : value;
+    
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: newValue
+    }));
   };
 
-  // Get the maximum votes for percentage calculation
-  const maxVotes = Math.max(...languages.map(lang => lang.votes), 1);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSubmitted(true);
+    
+    // Create URL params from form data
+    const params = new URLSearchParams();
+    
+    for (const [key, value] of Object.entries(formData)) {
+      // Only add the parameter if it has a value (or is true for checkboxes)
+      if (value || value === 0) {
+        params.append(key, value === true ? 'on' : value);
+      }
+    }
+    
+    // Change the URL without reloading the page
+    window.history.pushState({}, '', `/?${params.toString()}`);
+  };
 
   return (
-    <div className="voting-container">
-      <h1 className="app-title">Programming Language Voting App</h1>
-      
-      <div>
-        {languages.map((language, index) => (
-          <div key={index} className="language-card">
-            <span className="language-name">{language.name}</span>
-            <div className="vote-info">
-              <span className="vote-count">
-                {language.votes} vote{language.votes !== 1 ? 's' : ''}
-              </span>
-              <button
-                onClick={() => handleVote(index)}
-                className="vote-button"
-              >
-                Vote
-              </button>
-            </div>
-          </div>
-        ))}
+    <div>
+      <div style={{ backgroundColor: '#333', color: 'white', padding: '10px' }}>
+        <h1>Sample form</h1>
       </div>
       
-      <div className="results-section">
-        <h2 className="results-title">Results</h2>
-        {languages.map((language, index) => (
-          <div key={index} className="result-item" ref={el => resultRefs.current[index] = el}>
-            <div className="result-header">
-              <span>{language.name}</span>
-              <span>{language.votes} vote{language.votes !== 1 ? 's' : ''}</span>
-            </div>
-            <div className="progress-container">
-              <div 
-                className="progress-bar" 
-                style={{ 
-                  width: `${language.votes === 0 ? 0 : Math.max(5, (language.votes / maxVotes) * 100)}%` 
-                }}
-              ></div>
-            </div>
-          </div>
-        ))}
+      <div style={{ backgroundColor: '#e0c599', padding: '20px' }}>
+        <FormComponent 
+          formData={formData} 
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
       </div>
+
+      {submitted && (
+        <div style={{ backgroundColor: '#1a5e5e', color: 'white', padding: '20px' }}>
+          <h2>Entered information:</h2>
+          
+          <p>Your name: {formData.firstName} {formData.lastName}</p>
+          <p>Your age: {formData.age}</p>
+          <p>Your gender: {formData.gender}</p>
+          <p>Your destination: {formData.destination}</p>
+          
+          <p>Your dietary restrictions:</p>
+          <p>**Nuts free : {formData.nutsFree ? 'Yes' : 'No'}</p>
+          <p>**Lactose free : {formData.lactoseFree ? 'Yes' : 'No'}</p>
+          <p>**Vegan meal : {formData.vegan ? 'Yes' : 'No'}</p>
+        </div>
+      )}
     </div>
   );
 }
+
+export default App;
